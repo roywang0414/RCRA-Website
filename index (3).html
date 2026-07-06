@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rensselaer County Roleplay Alliance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F6F2;
+    --surface: #FFFFFF;
+    --ink: #191C1A;
+    --muted: #5B665F;
+    --line: #D9DCD3;
+    --yellow: #FFFAA0;
+    --yellow-shade: #F5F090;
+    --coral: #FE646F;
+    --coral-tint: #FFEDEE;
+    --green-ok: #2F7A4D;
+    --green-tint: #EAF6EE;
+    --radius: 3px;
+    --maxw: 1080px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Fredoka', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3, .display{ font-family:'Fredoka', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'Fredoka', sans-serif; letter-spacing:0.08em; text-transform:uppercase; }
+  a{color:inherit;}
+  p{ margin:0; }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,246,242,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
+  .brand .mono{ font-size:11px; color:var(--muted); letter-spacing:0.12em; }
+  .seal{ width:38px; height:38px; flex:none; }
+  .navlinks{ display:flex; gap:8px; flex-wrap:wrap; }
+  .navlinks .btn{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:9px 16px; }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border-radius:var(--radius); border:1px solid var(--ink);
+    background:var(--surface); color:var(--ink); text-decoration:none;
+    font-family:'Fredoka', sans-serif;
+    font-weight:600; padding:13px 24px; font-size:14px; cursor:pointer;
+    position:relative; overflow:hidden;
+    transition: transform .12s ease, background-color .12s ease, box-shadow .12s ease, color .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover{ box-shadow: 0 2px 0 var(--ink); transform: translateY(-1px); }
+  .btn:active, .btn.is-pressed{ transform: scale(0.95) translateY(0); box-shadow:none; }
+  .btn-primary{ background:var(--yellow); border-color:var(--yellow-shade); color:var(--ink); }
+  .btn-primary:hover{ background:var(--yellow-shade); box-shadow:0 2px 0 var(--coral); }
+  .btn-secondary{ background:transparent; border-color:var(--coral); color:var(--coral); }
+  .btn-secondary:hover{ background:var(--coral); color:#fff; box-shadow:0 2px 0 #c94550; }
+  .btn-outline{ background:transparent; }
+  .btn-danger{ border-color:var(--coral); color:var(--coral); background:transparent; padding:8px 14px; font-size:13px; }
+  .btn-danger:hover{ background:var(--coral); color:#fff; box-shadow:0 2px 0 #c94550; }
+  .btn-ghost{ border-color:var(--line); color:var(--muted); padding:8px 14px; font-size:13px; }
+  .btn-ghost:hover{ box-shadow:0 2px 0 var(--line); }
+  .btn-sm{ padding:8px 14px; font-size:13px; }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .btn:disabled:hover{ box-shadow:none; transform:none; }
+
+  .btn .check{
+    position:absolute; right:10px; width:14px; height:14px;
+    opacity:0; transform:scale(0.5);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .btn.is-pressed .check{ opacity:1; transform:scale(1); }
+  .btn.is-pressed{ padding-right:34px; }
+
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); background:var(--surface); cursor:pointer;
+    transition: transform .12s ease, background-color .12s ease;
+  }
+  .icon-btn:hover{ transform:scale(1.06); }
+  .icon-btn.yes{ border-color:var(--green-ok); color:var(--green-ok); }
+  .icon-btn.yes:hover{ background:var(--green-ok); color:#fff; }
+  .icon-btn.no{ border-color:var(--coral); color:var(--coral); }
+  .icon-btn.no:hover{ background:var(--coral); color:#fff; }
+
+  /* ---------- Lane divider (signature element) ---------- */
+  .lane{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  .lane-rule{ height:0; border-top:3px dashed var(--line); margin: 64px 0; }
+
+  /* ---------- Hero ---------- */
+  .hero{ max-width:var(--maxw); margin:0 auto; padding:88px 24px 40px; position:relative; }
+  .hero .eyebrow{
+    color:var(--coral); font-size:12px; font-weight:600; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero .eyebrow::before{ content:""; width:22px; height:2px; background:var(--coral); display:inline-block; }
+  .hero h1{
+    font-size:clamp(40px, 7vw, 84px); font-weight:900; line-height:0.98; margin:0; text-transform:uppercase;
+  }
+  .hero .watermark{ position:absolute; right:-40px; top:20px; width:260px; opacity:0.05; pointer-events:none; }
+
+  .about{ max-width:720px; margin:32px 0 0; }
+  .about .label{ font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .about p{ font-size:19px; line-height:1.55; color:#2B302D; margin:0; }
+
+  .cta-row{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+
+  /* ---------- Cards ---------- */
+  .cards{
+    max-width:var(--maxw); margin:0 auto; padding:0 24px 100px;
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+  }
+  @media (max-width:800px){
+    .cards{ grid-template-columns:1fr; }
+    .hero .watermark{ display:none; }
+  }
+  .card{ background:var(--surface); padding:36px 30px; display:flex; flex-direction:column; gap:16px; }
+  .card .tag{ font-size:11px; color:var(--muted); }
+  .card h3{ font-size:22px; margin:0; font-weight:800; }
+  .card p{ font-size:14.5px; color:var(--muted); line-height:1.5; margin:0; flex:1; }
+  .card .btn{ align-self:flex-start; }
+
+  footer{ border-top:1px solid var(--line); padding:28px 24px; }
+  footer .lane{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:10px; font-size:12px; color:var(--muted);
+  }
+
+  .sr-only{ position:absolute; width:1px;height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+  :focus-visible{ outline:2px solid var(--coral); outline-offset:2px; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+
+  /* ================= Staff Portal styles ================= */
+  #view-staff .label{ color:var(--muted); font-size:12px; margin-bottom:14px; }
+  #login-view{ padding:88px 24px 100px; }
+  #login-view .intro{ max-width:560px; }
+  #login-view h1{ font-size:clamp(30px,5vw,44px); font-weight:700; margin-bottom:16px; text-transform:uppercase; }
+  #login-view .desc{ color:#2B302D; font-size:16px; line-height:1.6; margin-bottom:40px; }
+
+  .login-card{ max-width:380px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:30px; }
+  .login-card .eyebrow{
+    color:var(--coral); font-size:12px; font-weight:600; margin-bottom:20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .login-card .eyebrow::before{ content:""; width:22px; height:2px; background:var(--coral); display:inline-block; }
+
+  label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600; }
+  input[type=text], input[type=email], input[type=password]{
+    width:100%; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--bg); padding:11px 12px; font-family:'Fredoka', sans-serif;
+    font-size:14px; color:var(--ink); margin-bottom:16px;
+  }
+  input:focus, select:focus{ outline:2px solid var(--coral); outline-offset:1px; }
+  select{
+    width:100%; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--surface); padding:11px 12px; font-family:'Fredoka', sans-serif;
+    font-size:14px; color:var(--ink);
+  }
+  .error-text{ color:var(--coral); font-size:13px; margin-top:-6px; margin-bottom:14px; font-weight:600; }
+
+  #portal-view{ padding-bottom:100px; }
+  .portal-topbar{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    padding:24px 24px 0;
+  }
+  .portal-topbar .who{ font-size:14px; }
+  .portal-topbar .who .mono{ color:var(--muted); font-size:11px; }
+
+  .tabbar{ display:flex; gap:6px; flex-wrap:wrap; padding:24px 24px 0; border-bottom:1px solid var(--line); }
+  .tab-btn{
+    border:none; background:transparent; cursor:pointer;
+    font-family:'Fredoka', sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:0.06em; text-transform:uppercase; color:var(--muted);
+    padding:12px 6px; margin-right:20px; border-bottom:2px solid transparent;
+    display:flex; align-items:center; gap:8px;
+  }
+  .tab-btn.active{ color:var(--ink); border-bottom-color:var(--coral); }
+  .tab-btn:disabled{ cursor:not-allowed; opacity:0.5; }
+  .tab-btn .soon{ font-size:9px; background:var(--line); color:var(--muted); padding:2px 6px; border-radius:20px; letter-spacing:0.05em; }
+
+  .tab-panel{ padding:36px 24px 0; }
+  .tab-panel h3{ font-size:20px; font-weight:700; margin-bottom:18px; }
+
+  .panel-box{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:32px; }
+  .form-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:6px; }
+  @media (max-width:720px){ .form-grid{ grid-template-columns:1fr; } }
+
+  .staff-row{ display:flex; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  .staff-row:last-child{ border-bottom:none; }
+  .staff-id{ flex:1; min-width:200px; }
+  .staff-id .name{ font-weight:700; font-size:15.5px; }
+  .staff-id .uname{ color:var(--muted); font-size:12.5px; }
+  .rank-badge{
+    font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    padding:5px 10px; border-radius:20px; background:var(--green-tint); color:var(--green-ok); white-space:nowrap;
+  }
+  .rank-badge.tier-owner{ background:var(--yellow); color:#5c4c00; }
+  .rank-badge.tier-shr{ background:var(--coral-tint); color:var(--coral); }
+  .staff-actions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .staff-actions select{ width:auto; padding:8px 10px; font-size:13px; }
+
+  .removal-row{ display:flex; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  .removal-row:last-child{ border-bottom:none; }
+  .removal-info{ flex:1; min-width:220px; }
+  .removal-info .r-user{ font-weight:700; font-size:15px; }
+  .removal-info .r-reason{ color:var(--muted); font-size:13.5px; margin-top:2px; }
+  .removal-info .r-meta{ color:#9AA39C; font-size:11px; margin-top:4px; }
+  .status-pill{ font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; padding:6px 12px; border-radius:20px; }
+  .status-pill.pending{ background:var(--line); color:var(--muted); }
+  .status-pill.done{ background:var(--green-tint); color:var(--green-ok); }
+  .status-pill.denied{ background:var(--coral-tint); color:var(--coral); }
+  .removal-decision{ display:flex; gap:8px; align-items:center; }
+
+  .muted{ color:var(--muted); }
+  .empty-state{ color:var(--muted); font-size:14px; padding:20px 0; }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(25,28,26,0.45);
+    display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-box{ background:var(--surface); border-radius:var(--radius); padding:30px; max-width:380px; width:100%; border:1px solid var(--line); }
+  .modal-box h3{ margin-bottom:18px; font-size:18px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:6px; }
+  .modal-note{ font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+  .modal-note.success{ color:var(--green-ok); font-weight:600; }
+  .modal-note code{
+    display:block; background:var(--bg); border:1px dashed var(--line);
+    padding:10px; border-radius:var(--radius); margin-top:8px; font-size:13px; color:var(--ink); word-break:break-all;
+  }
+</style>
+</head>
+<body id="top">
+
+<header>
+  <div class="nav-inner">
+    <div class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="27" stroke="#FE646F" stroke-width="2" stroke-dasharray="3 4"/>
+        <circle cx="30" cy="30" r="21" stroke="#FE646F" stroke-width="1"/>
+        <text x="30" y="27" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="9" font-weight="700" fill="#191C1A">RCRA</text>
+        <text x="30" y="38" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="4.5" letter-spacing="0.5" fill="#5B665F">RENSSELAER CO.</text>
+      </svg>
+      <span class="mono">RCRA</span>
+    </div>
+    <nav class="navlinks">
+      <a href="#top" class="btn btn-outline" id="nav-home">Home</a>
+      <a href="https://discord.gg/G8QagPUqu" target="_blank" rel="noopener" class="btn btn-outline" data-external>
+        Discord
+        <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#staff" class="btn btn-outline" id="nav-staff">Staff Portal</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HOME VIEW ===================== -->
+<div id="view-home">
+  <section class="hero">
+    <svg class="watermark" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="27" stroke="#FE646F" stroke-width="2" stroke-dasharray="3 4"/>
+      <circle cx="30" cy="30" r="21" stroke="#FE646F" stroke-width="1"/>
+      <text x="30" y="27" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="9" font-weight="700" fill="#191C1A">RCRA</text>
+    </svg>
+    <div class="eyebrow mono">Roblox Roleplay Community · Rensselaer County</div>
+    <h1>Rensselaer County<br>Roleplay Alliance</h1>
+
+    <div class="about">
+      <div class="label mono">About us</div>
+      <p>🌻 Rensselaer County Roleplay Alliance is a top delivering &amp; largest third-party Roblox roleplay community with 30,000+ members, delivering realistic, active, and high-quality roleplay every day within the game "Rensselaer County."</p>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://discord.gg/G8QagPUqu" target="_blank" rel="noopener" class="btn btn-primary" data-external>
+        Join Now
+        <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="https://www.roblox.com/communities/33540916/Rensselaer-County-Roleplay-Alliance#!/about" target="_blank" rel="noopener" class="btn btn-secondary" data-external>
+        Roblox Group
+        <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <div class="lane"><div class="lane-rule"></div></div>
+
+  <section class="cards">
+    <div class="card">
+      <div class="tag mono">Roblox</div>
+      <h3>Roblox Group</h3>
+      <p>Join the official Roblox community to access the group, get updates, and represent RCRA in-game.</p>
+      <a href="https://www.roblox.com/communities/33540916/Rensselaer-County-Roleplay-Alliance#!/about" target="_blank" rel="noopener" class="btn btn-outline" data-external>
+        Visit Group
+        <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="card">
+      <div class="tag mono">Discord</div>
+      <h3>Discord Server</h3>
+      <p>Come chat, find sessions, and connect with 30,000+ members in the community every day.</p>
+      <a href="https://discord.gg/G8QagPUqu" target="_blank" rel="noopener" class="btn btn-outline" data-external>
+        Join Server
+        <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="card">
+      <div class="tag mono">Staff</div>
+      <h3>Staff Portal</h3>
+      <p>Restricted access for RCRA staff members. Log in to manage sessions, applications, and reports.</p>
+      <a href="#staff" class="btn btn-outline" id="nav-staff-card">Open Portal</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="lane">
+      <span class="mono">RCRA · Rensselaer County</span>
+      <span>Not affiliated with Roblox Corporation or Discord Inc.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== STAFF VIEW ===================== -->
+<div id="view-staff" style="display:none;">
+
+  <section id="login-view">
+    <div class="lane">
+      <div class="intro">
+        <div class="label mono">Restricted access</div>
+        <h1>Staff Portal</h1>
+        <p class="desc">Sign in to view the staff roster, submit group removals, and (for Owner / Senior High Rank) manage staff logins.</p>
+      </div>
+      <div class="login-card">
+        <div class="eyebrow mono">Have a login?</div>
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@alliance">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+        <div id="login-error" class="error-text" style="display:none;">Incorrect email or password.</div>
+        <button id="login-btn" class="btn btn-primary" style="width:100%;">Login</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="portal-view" style="display:none;">
+    <div class="portal-topbar">
+      <div class="who">Logged in as <strong id="me-name"></strong><br><span class="mono" id="me-rank"></span></div>
+      <button id="logout-btn" class="btn btn-outline btn-sm">Log out</button>
+    </div>
+
+    <div class="tabbar">
+      <button class="tab-btn active" data-tab="staff">Staff</button>
+      <button class="tab-btn" data-tab="removals">Group Removals</button>
+      <button class="tab-btn" disabled>Adjustments <span class="mono soon">Soon</span></button>
+      <button class="tab-btn" disabled>Payouts <span class="mono soon">Soon</span></button>
+    </div>
+
+    <div class="tab-panel" id="tab-staff">
+      <div id="create-login-panel" class="panel-box" style="display:none;">
+        <h3>Create Login</h3>
+        <div class="form-grid">
+          <div><label for="new-username">Roblox Username</label><input type="text" id="new-username" placeholder="e.g. rcra_roy"></div>
+          <div><label for="new-display">Roblox Display Name</label><input type="text" id="new-display" placeholder="e.g. Roy"></div>
+          <div><label for="new-rank">Rank</label><select id="new-rank"></select></div>
+        </div>
+        <button id="create-login-btn" class="btn btn-primary btn-sm">Create Login</button>
+      </div>
+
+      <h3>Full Staff List</h3>
+      <div id="staff-list"></div>
+    </div>
+
+    <div class="tab-panel" id="tab-removals" style="display:none;">
+      <div class="panel-box">
+        <h3>Group Removal</h3>
+        <div class="form-grid" style="grid-template-columns:1fr 1fr;">
+          <div><label for="gr-username">Roblox Username</label><input type="text" id="gr-username" placeholder="Username to remove"></div>
+          <div><label for="gr-reason">Reason</label><input type="text" id="gr-reason" placeholder="Reason for removal"></div>
+        </div>
+        <button id="gr-submit-btn" class="btn btn-primary btn-sm">Submit Removal</button>
+      </div>
+
+      <h3>Pending Group Removals</h3>
+      <div id="gr-list"></div>
+    </div>
+  </section>
+</div>
+
+<div id="modal-overlay" class="modal-overlay" style="display:none;">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<script>
+/* ================= View switching (Home / Staff Portal) ================= */
+function showView(view){
+  document.getElementById('view-home').style.display = view === 'home' ? 'block' : 'none';
+  document.getElementById('view-staff').style.display = view === 'staff' ? 'block' : 'none';
+  window.scrollTo(0,0);
+}
+function goHome(e){ if(e) e.preventDefault(); showView('home'); history.replaceState(null,'','#top'); }
+function goStaff(e){ if(e) e.preventDefault(); showView('staff'); history.replaceState(null,'','#staff'); }
+
+document.getElementById('nav-home').addEventListener('click', goHome);
+document.getElementById('nav-staff').addEventListener('click', goStaff);
+document.getElementById('nav-staff-card').addEventListener('click', goStaff);
+
+if(window.location.hash === '#staff'){ showView('staff'); }
+
+/* ================= External link click feedback ================= */
+document.querySelectorAll('.btn[data-external]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    btn.classList.add('is-pressed');
+    setTimeout(function(){ btn.classList.remove('is-pressed'); }, 900);
+  });
+});
+
+/* ================= Staff Portal data (persisted via artifact storage where available) ================= */
+const STORAGE_KEY_STAFF = 'rcra-staff-data';
+const STORAGE_KEY_REMOVALS = 'rcra-removals-data';
+const storageAvailable = (typeof window !== 'undefined' && !!window.storage);
+
+async function saveStaff(){
+  if(!storageAvailable) return;
+  try{ await window.storage.set(STORAGE_KEY_STAFF, JSON.stringify({ staff, nextStaffId }), true); }
+  catch(e){ console.error('Could not save staff data', e); }
+}
+async function saveRemovals(){
+  if(!storageAvailable) return;
+  try{ await window.storage.set(STORAGE_KEY_REMOVALS, JSON.stringify({ removals, nextRemovalId }), true); }
+  catch(e){ console.error('Could not save removals data', e); }
+}
+async function loadPersistedData(){
+  if(!storageAvailable) return;
+  try{
+    const result = await window.storage.get(STORAGE_KEY_STAFF, true);
+    if(result && result.value){
+      const parsed = JSON.parse(result.value);
+      staff = parsed.staff;
+      nextStaffId = parsed.nextStaffId;
+    }
+  }catch(e){ /* no saved staff data yet — keep default seed */ }
+  try{
+    const result = await window.storage.get(STORAGE_KEY_REMOVALS, true);
+    if(result && result.value){
+      const parsed = JSON.parse(result.value);
+      removals = parsed.removals;
+      nextRemovalId = parsed.nextRemovalId;
+    }
+  }catch(e){ /* no saved removals data yet */ }
+}
+
+const RANKS = [
+  { name:"Community Executive", tier:"owner" },
+  { name:"Community Director", tier:"shr" },
+  { name:"Associate Director", tier:"shr" },
+  { name:"Assistant Director", tier:"shr" },
+  { name:"Senior Management", tier:"hr" },
+  { name:"Server Management", tier:"hr" },
+  { name:"Senior Administrative", tier:"mr" },
+  { name:"Server Administrative", tier:"mr" },
+  { name:"Senior Moderator", tier:"mr" },
+  { name:"Community Moderator", tier:"mr" }
+];
+function tierOf(rankName){
+  const r = RANKS.find(r => r.name === rankName);
+  return r ? r.tier : "mr";
+}
+function isAdminTier(tier){ return tier === "owner" || tier === "shr"; }
+function tierLabelClass(tier){
+  if(tier === "owner") return "tier-owner";
+  if(tier === "shr") return "tier-shr";
+  return "";
+}
+
+let staff = [
+  { id: 1, username: "Roy", display: "Roy", rank: "Community Executive", email: "Roy@owner.alliance", password: "TEST" }
+];
+let nextStaffId = 2;
+
+let removals = []; // { id, username, reason, status: 'pending'|'done'|'denied', submittedBy }
+let nextRemovalId = 1;
+
+let currentUser = null;
+let dataReady = false;
+
+async function initPortalData(){
+  el('login-btn').disabled = true;
+  el('login-btn').textContent = 'Loading…';
+  await loadPersistedData();
+  dataReady = true;
+  el('login-btn').disabled = false;
+  el('login-btn').textContent = 'Login';
+  // First-ever run: persist the seed data so it's there for next time / other viewers
+  saveStaff();
+  saveRemovals();
+}
+initPortalData();
+
+function genTempPassword(){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for(let i=0;i<8;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+function el(id){ return document.getElementById(id); }
+
+function openModal(html){
+  el('modal-box').innerHTML = html;
+  el('modal-overlay').style.display = 'flex';
+}
+function closeModal(){
+  el('modal-overlay').style.display = 'none';
+  el('modal-box').innerHTML = '';
+}
+
+function populateRankSelect(selectEl, selected){
+  selectEl.innerHTML = RANKS.map(r =>
+    `<option value="${r.name}" ${r.name===selected?'selected':''}>${r.name}</option>`
+  ).join('');
+}
+populateRankSelect(el('new-rank'), RANKS[RANKS.length-1].name);
+
+/* ---------------- Login ---------------- */
+el('login-btn').addEventListener('click', () => {
+  if(!dataReady) return;
+  const email = el('login-email').value.trim();
+  const pass = el('login-password').value;
+  const match = staff.find(s => s.email.toLowerCase() === email.toLowerCase() && s.password === pass);
+  if(!match){
+    el('login-error').style.display = 'block';
+    return;
+  }
+  el('login-error').style.display = 'none';
+  currentUser = match;
+  el('login-email').value = '';
+  el('login-password').value = '';
+  showPortal();
+});
+
+el('logout-btn').addEventListener('click', () => {
+  currentUser = null;
+  el('portal-view').style.display = 'none';
+  el('login-view').style.display = 'block';
+});
+
+function showPortal(){
+  el('login-view').style.display = 'none';
+  el('portal-view').style.display = 'block';
+  el('me-name').textContent = currentUser.display;
+  el('me-rank').textContent = currentUser.rank;
+  renderStaffList();
+  renderRemovals();
+}
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    el('tab-' + btn.dataset.tab).style.display = 'block';
+  });
+});
+
+/* ---------------- Staff list rendering ---------------- */
+function renderStaffList(){
+  const admin = isAdminTier(tierOf(currentUser.rank));
+  el('create-login-panel').style.display = admin ? 'block' : 'none';
+
+  const list = el('staff-list');
+  list.innerHTML = '';
+
+  staff.forEach(s => {
+    const tier = tierOf(s.rank);
+    const row = document.createElement('div');
+    row.className = 'staff-row';
+    const isMe = s.id === currentUser.id;
+
+    row.innerHTML = `
+      <div class="staff-id">
+        <div class="name">${s.display}</div>
+        <div class="uname">@${s.username}</div>
+      </div>
+      <span class="rank-badge ${tierLabelClass(tier)}" id="badge-${s.id}">${s.rank}</span>
+      <div class="staff-actions" id="actions-${s.id}"></div>
+    `;
+    list.appendChild(row);
+
+    const actions = row.querySelector(`#actions-${s.id}`);
+
+    if(admin){
+      const rankSelect = document.createElement('select');
+      populateRankSelect(rankSelect, s.rank);
+      rankSelect.addEventListener('change', () => {
+        s.rank = rankSelect.value;
+        renderStaffList();
+        saveStaff();
+      });
+      actions.appendChild(rankSelect);
+
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'btn btn-ghost btn-sm';
+      resetBtn.textContent = 'Reset Password';
+      resetBtn.addEventListener('click', () => {
+        const temp = genTempPassword();
+        s.password = temp;
+        saveStaff();
+        openModal(`
+          <h3>Password Reset</h3>
+          <div class="modal-note success">New temporary password created for ${s.display}.</div>
+          <div class="modal-note">Share this with them directly — it won't be shown again.<code>${temp}</code></div>
+          <div class="modal-actions"><button class="btn btn-primary btn-sm" id="modal-close-btn">Done</button></div>
+        `);
+        el('modal-close-btn').addEventListener('click', closeModal);
+      });
+      actions.appendChild(resetBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger btn-sm';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => {
+        openModal(`
+          <h3>Remove Login</h3>
+          <div class="modal-note">Delete ${s.display}'s (@${s.username}) staff login? This can't be undone.</div>
+          <div class="modal-actions">
+            <button class="btn btn-ghost btn-sm" id="modal-cancel-btn">Cancel</button>
+            <button class="btn btn-danger btn-sm" id="modal-confirm-btn">Delete</button>
+          </div>
+        `);
+        el('modal-cancel-btn').addEventListener('click', closeModal);
+        el('modal-confirm-btn').addEventListener('click', () => {
+          staff = staff.filter(x => x.id !== s.id);
+          saveStaff();
+          closeModal();
+          if(isMe){
+            currentUser = null;
+            el('portal-view').style.display = 'none';
+            el('login-view').style.display = 'block';
+          } else {
+            renderStaffList();
+          }
+        });
+      });
+      actions.appendChild(delBtn);
+
+    } else {
+      if(isMe){
+        const changeBtn = document.createElement('button');
+        changeBtn.className = 'btn btn-outline btn-sm';
+        changeBtn.textContent = 'Change Password';
+        changeBtn.addEventListener('click', () => {
+          openModal(`
+            <h3>Change Password</h3>
+            <label for="cp-old">Current password</label>
+            <input type="password" id="cp-old">
+            <label for="cp-new">New password</label>
+            <input type="password" id="cp-new">
+            <div id="cp-error" class="error-text" style="display:none;">Current password is incorrect.</div>
+            <div class="modal-actions">
+              <button class="btn btn-ghost btn-sm" id="modal-cancel-btn">Cancel</button>
+              <button class="btn btn-primary btn-sm" id="modal-save-btn">Save</button>
+            </div>
+          `);
+          el('modal-cancel-btn').addEventListener('click', closeModal);
+          el('modal-save-btn').addEventListener('click', () => {
+            const oldPass = el('cp-old').value;
+            const newPass = el('cp-new').value;
+            if(oldPass !== s.password){
+              el('cp-error').style.display = 'block';
+              return;
+            }
+            s.password = newPass || s.password;
+            saveStaff();
+            closeModal();
+          });
+        });
+        actions.appendChild(changeBtn);
+      }
+    }
+  });
+}
+
+/* ---------------- Create Login ---------------- */
+el('create-login-btn').addEventListener('click', () => {
+  const username = el('new-username').value.trim();
+  const display = el('new-display').value.trim();
+  const rank = el('new-rank').value;
+
+  if(!username || !display){
+    openModal(`
+      <h3>Missing info</h3>
+      <div class="modal-note">Enter a Roblox username and display name before creating a login.</div>
+      <div class="modal-actions"><button class="btn btn-primary btn-sm" id="modal-close-btn">Ok</button></div>
+    `);
+    el('modal-close-btn').addEventListener('click', closeModal);
+    return;
+  }
+
+  const email = `${username.toLowerCase()}@staff.alliance`;
+  const tempPassword = genTempPassword();
+
+  staff.push({ id: nextStaffId++, username, display, rank, email, password: tempPassword });
+  saveStaff();
+
+  el('new-username').value = '';
+  el('new-display').value = '';
+  populateRankSelect(el('new-rank'), RANKS[RANKS.length-1].name);
+
+  renderStaffList();
+
+  openModal(`
+    <h3>Login Created</h3>
+    <div class="modal-note success">${display} (@${username}) — ${rank}</div>
+    <div class="modal-note">Share these sign-in details with them:
+      <code>Email: ${email}<br>Temporary password: ${tempPassword}</code>
+    </div>
+    <div class="modal-actions"><button class="btn btn-primary btn-sm" id="modal-close-btn">Done</button></div>
+  `);
+  el('modal-close-btn').addEventListener('click', closeModal);
+});
+
+/* ---------------- Group Removals ---------------- */
+el('gr-submit-btn').addEventListener('click', () => {
+  const username = el('gr-username').value.trim();
+  const reason = el('gr-reason').value.trim();
+  if(!username || !reason) return;
+
+  removals.unshift({ id: nextRemovalId++, username, reason, status: 'pending', submittedBy: currentUser.display });
+  saveRemovals();
+  el('gr-username').value = '';
+  el('gr-reason').value = '';
+  renderRemovals();
+});
+
+function renderRemovals(){
+  const admin = isAdminTier(tierOf(currentUser.rank));
+  const list = el('gr-list');
+  list.innerHTML = '';
+
+  if(removals.length === 0){
+    list.innerHTML = '<div class="empty-state">No group removals submitted yet.</div>';
+    return;
+  }
+
+  removals.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'removal-row';
+    row.innerHTML = `
+      <div class="removal-info">
+        <div class="r-user">@${r.username}</div>
+        <div class="r-reason">${r.reason}</div>
+        <div class="r-meta">Submitted by ${r.submittedBy}</div>
+      </div>
+      <div id="decision-${r.id}"></div>
+    `;
+    list.appendChild(row);
+
+    const decision = row.querySelector(`#decision-${r.id}`);
+
+    if(r.status === 'pending' && admin){
+      decision.className = 'removal-decision';
+      decision.innerHTML = `
+        <button class="icon-btn yes" title="Mark done" id="yes-${r.id}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn no" title="Deny" id="no-${r.id}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </button>
+      `;
+      el(`yes-${r.id}`).addEventListener('click', () => { r.status = 'done'; renderRemovals(); saveRemovals(); });
+      el(`no-${r.id}`).addEventListener('click', () => { r.status = 'denied'; renderRemovals(); saveRemovals(); });
+    } else {
+      const label = r.status === 'pending' ? 'Pending' : (r.status === 'done' ? 'Done' : 'Denied');
+      decision.innerHTML = `<span class="status-pill ${r.status}">${label}</span>`;
+    }
+  });
+}
+</script>
+
+</body>
+</html>
